@@ -1,0 +1,53 @@
+#
+#RewriteEngine On
+#SetEnvIf Request_URI "^/api/v1/cm" ADMIN_PASSWD=true
+#
+#AuthUserFile /var/www/vhosts/texnomart.uz/httpdocs/.htpasswd
+#AuthName "Password Protected"
+#AuthType Basic
+#Order Allow,Deny
+#Satisfy any
+#Allow from all
+#Require valid-user
+#Deny from env=ADMIN_PASSWD
+
+<IfModule mod_rewrite.c>
+    #Options +FollowSymlinks
+    RewriteEngine On
+</IfModule>
+
+
+<IfModule mod_rewrite.c>
+    #Options +FollowSymlinks
+    RewriteEngine On
+</IfModule>
+ 
+<IfModule mod_rewrite.c>
+
+    RewriteCond %{REQUEST_URI} ^/(api)
+    RewriteRule ^.*$ api/web/index.php [L]
+
+    # если /admin, то в backend
+    RewriteCond %{REQUEST_URI} ^/(admin)
+    RewriteRule ^admin/assets/(.*)$ backend/web/assets/$1 [L]
+    RewriteRule ^admin/css/(.*)$ backend/web/css/$1 [L]
+    RewriteRule ^admin/js/(.*)$ backend/web/js/$1 [L]
+    RewriteRule ^admin/dist/(.*)$ backend/web/dist/$1 [L]
+    RewriteRule ^admin/plugins/(.*)$ backend/web/plugins/$1 [L]
+    RewriteRule ^admin/bower_components/(.*)$ backend/web/bower_components/$1 [L]
+    RewriteCond %{REQUEST_URI} !^/backend/web/(assets|js|css|js)/
+    RewriteCond %{REQUEST_URI} ^/(admin)
+    RewriteRule ^.*$ backend/web/index.php [L]
+    RewriteCond %{REQUEST_URI} ^/(assets|css|js|images|fonts)
+    RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
+    RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
+    RewriteRule ^fonts/(.*)$ frontend/web/fonts/$1 [L]
+    RewriteRule ^js/(.*)$ frontend/web/js/$1 [L]
+    RewriteRule ^images/(.*)$ frontend/web/images/$1 [L]
+    RewriteRule ^(.*)$ frontend/web/$1 [L]
+    RewriteCond %{REQUEST_URI} !^/(frontend|backend)/web/(assets|css|js|fonts)/
+    RewriteCond %{REQUEST_URI} !index.php
+    RewriteCond %{REQUEST_FILENAME} !-f [OR]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^.*$ frontend/web/index.php
+</IfModule>
